@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "./firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 function App() {
+  const googleSignIn = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithRedirect(auth, provider);
+  };
+
+  const [user] = useAuthState(auth);
+  // console.log(user);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {user ? (
+        <button className="login-button" onClick={() => auth.signOut()}>
+          Log out
+        </button>
+      ) : (
+        <button className="login-button" onClick={googleSignIn}>
+          Log in
+        </button>
+      )}
     </div>
   );
 }
